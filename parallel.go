@@ -1,36 +1,45 @@
+
+// go parallel
+// r.20241021.2358
+// (c) 2024 unix-world.org
+
 package parallel
 
 import (
 	"sync"
 )
 
-func ForEach[T any](arr []T, fn func(T)) {
-	wg := &sync.WaitGroup{}
+
+func ForEach(arr []any, fn func(elem any)) {
+	wg := &sync.WaitGroup{} // new wg instance
 	wg.Add(len(arr))
 
 	for _, item := range arr {
-		go func(x T) {
+		go func(el any) {
 			defer wg.Done()
 
-			fn(x)
+			fn(el)
 		}(item)
 	}
 
 	wg.Wait()
 }
 
-func ForEachLimit[T any](arr []T, limit int, fn func(T)) {
-	wg := &sync.WaitGroup{}
+
+func ForEachLimit(arr []any, limit int, fn func(elem any)) {
+	wg := &sync.WaitGroup{} // new wg instance
 	wg.Add(len(arr))
 
 	limiter := make(chan struct{}, limit)
 
 	for _, item := range arr {
 		limiter <- struct{}{}
-		go func(x T) {
+
+		go func(el any) {
 			defer wg.Done()
 
-			fn(x)
+			fn(el)
+
 			<-limiter
 		}(item)
 	}
@@ -38,39 +47,42 @@ func ForEachLimit[T any](arr []T, limit int, fn func(T)) {
 	wg.Wait()
 }
 
-func Map[T1 any, T2 any](arr []T1, fn func(T1) T2) []T2 {
-	wg := &sync.WaitGroup{}
+
+func Map(arr []any, fn func(elem any) any) []any {
+	wg := &sync.WaitGroup{} // new wg instance
 	wg.Add(len(arr))
 
-	output := make([]T2, len(arr), len(arr))
+	output := make([]any, len(arr), len(arr))
 
 	for i := range arr {
-		go func(index int, x T1) {
+		go func(index int, el any) {
 			defer wg.Done()
 
-			result := fn(x)
+			result := fn(el)
 			output[index] = result
-
 		}(i, arr[i])
 	}
 
 	wg.Wait()
+
 	return output
 }
 
-func MapLimit[T1 any, T2 any](arr []T1, limit int, fn func(T1) T2) []T2 {
-	wg := &sync.WaitGroup{}
+
+func MapLimit(arr []any, limit int, fn func(elem any) any) []any {
+	wg := &sync.WaitGroup{} // new wg instance
 	wg.Add(len(arr))
 
-	output := make([]T2, len(arr), len(arr))
+	output := make([]any, len(arr), len(arr))
 	limiter := make(chan struct{}, limit)
 
 	for i := range arr {
 		limiter <- struct{}{}
-		go func(index int, x T1) {
+
+		go func(index int, el any) {
 			defer wg.Done()
 
-			result := fn(x)
+			result := fn(el)
 			output[index] = result
 
 			<-limiter
@@ -78,5 +90,9 @@ func MapLimit[T1 any, T2 any](arr []T1, limit int, fn func(T1) T2) []T2 {
 	}
 
 	wg.Wait()
+
 	return output
 }
+
+
+// #end
