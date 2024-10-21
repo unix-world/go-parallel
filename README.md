@@ -1,7 +1,8 @@
 Go Parallel
 ===
 
-![CI Status](https://github.com/smirzaei/parallel/actions/workflows/test.yml/badge.svg)
+A fork of:
+https://github.com/smirzaei/parallel/
 
 Run Go loops in parallel.
 
@@ -12,7 +13,7 @@ Installation
 Run
 
 ```BASH
-go get -u github.com/smirzaei/parallel
+go get -u github.com/unix-world/go-parallel
 ```
 
 Examples
@@ -123,4 +124,5 @@ fmt.Printf("The final result is %v\n", output)
 License
 ===
 
-[MIT](https://github.com/smirzaei/parallel/blob/master/LICENSE)
+[MIT](https://github.com/unix-world/go-parallel/blob/master/LICENSE)
+

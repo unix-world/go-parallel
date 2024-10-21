@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/smirzaei/parallel"
+	parallel "github.com/unix-world/go-parallel"
 )
 
 func main() {
